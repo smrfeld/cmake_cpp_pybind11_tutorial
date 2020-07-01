@@ -1,5 +1,5 @@
 import automobile
 
-c = automobile.Car("Mazda")
-print("Made a car called: %s" % c.get_name())
-c.drive("mullholland")
+c = automobile.Motorcycle("Yamaha")
+print("Made a bike called: %s" % c.get_name())
+c.ride("mullholland")

@@ -4,11 +4,11 @@
 
 int main() {
 
-    autos::Car c("Mazda");
+    autos::Motorcycle c("Yamaha");
 
     std::cout << "Made a car called: " << c.get_name() << std::endl;
 
-    c.drive("mullholland");
+    c.ride("mullholland");
 
     return 0;
 }

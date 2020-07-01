@@ -1,6 +1,6 @@
-#ifndef CAR_LIBRARY_H
-#define CAR_LIBRARY_H
+#ifndef AUTOMOBILE_LIBRARY_H
+#define AUTOMOBILE_LIBRARY_H
 
-#include "car_bits/car.hpp"
+#include "automobile_bits/motorcycle.hpp"
 
 #endif

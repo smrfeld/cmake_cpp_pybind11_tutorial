@@ -2,6 +2,13 @@
 
 This tutorial shows how to set up a `pybind11` project with `CMake` for wrapping a `C++` library into `Python`.
 
+The final result will be:
+* A `C++` project you can build independent of `pybind11`.
+* A `Python` library generated from wrapping the `C++` code.
+* Both using `CMake`.
+
+<img src="cover.jpg" alt="drawing" width="400"/>
+
 ## Requirements
 
 Obviously, get `pybind11`:
@@ -21,7 +28,7 @@ Next, we will initialize a C++ project. Two ways (of many more) are:
 1. Using `VS Code`. Install the `CMake Tools` extension. Then, bring up the command pallette and select `CMake: Quick start`. Follow the prompts and enter a name - I chose `automobile`. When prompted for library or executable, choose `library`. Your directory should now look like this:
     ```
     cpp/build/
-    cpp/car.cpp
+    cpp/motorcycle.cpp
     cpp/CMakeLists.txt
     ```
     We will separate the source and header files - this is always good practice. In the `cpp` directory, make two new directories:
@@ -32,7 +39,7 @@ Next, we will initialize a C++ project. Two ways (of many more) are:
     ```
     and move the source file:
     ```
-    mv car.cpp src/
+    mv motorcycle.cpp src/
     ```
     In the include directory, we would like to have a single header to import. This way, we could later simply `#include <automobile>`. We can organize it as follows:
     ```
@@ -43,15 +50,15 @@ Next, we will initialize a C++ project. Two ways (of many more) are:
     Finally, let us create a header file in the `cpp/include/automobile_bits` directory:
     ```
     cd cpp/include/automobile_bits
-    touch car.hpp
+    touch motorcycle.hpp
     ```
     The final directory structure should now look like this:
     ```
     cpp/build
     cpp/CMakeLists.txt
     cpp/include/automobile
-    cpp/include/automobile_bits/car.hpp
-    cpp/src/car.cpp
+    cpp/include/automobile_bits/motorcycle.hpp
+    cpp/src/motorcycle.cpp
     ```
 
 2. Manually create the files and directories, such that the final structure is:
@@ -59,8 +66,8 @@ Next, we will initialize a C++ project. Two ways (of many more) are:
     cpp/build
     cpp/CMakeLists.txt
     cpp/include/automobile
-    cpp/include/automobile_bits/car.hpp
-    cpp/src/car.cpp
+    cpp/include/automobile_bits/motorcycle.hpp
+    cpp/src/motorcycle.cpp
     ```
 
 We will need to edit the current `CMakeLists.txt` such that it can find the header and source files. I edited mine to read as follows:
@@ -85,8 +92,8 @@ set(PROJECT_INCLUDE_DIR "include/automobile_bits")
 
 # Source files
 set(SOURCE_FILES
-    ${PROJECT_INCLUDE_DIR}/car.hpp
-    ${PROJECT_SOURCE_DIR}/car.cpp
+    ${PROJECT_INCLUDE_DIR}/motorcycle.hpp
+    ${PROJECT_SOURCE_DIR}/motorcycle.cpp
 )
 
 # Set up such that XCode organizes the files correctly
@@ -108,7 +115,7 @@ install(FILES include/automobile DESTINATION include)
 install(DIRECTORY include/automobile_bits DESTINATION include)
 ```
 
-Let's also give the `car.hpp` and `car.cpp` files some reasonable content. For the header:
+Let's also give the `motorcycle.hpp` and `motorcycle.cpp` files some reasonable content. For the header:
 ```
 #include <string>
 
@@ -117,7 +124,7 @@ Let's also give the `car.hpp` and `car.cpp` files some reasonable content. For t
 
 namespace autos {
 
-class Car {
+class Motorcycle {
 
 private:
 
@@ -127,14 +134,14 @@ private:
 public:
 
     /// Constructor
-    Car(std::string name);
+    Motorcycle(std::string name);
 
-    /// Get car name
-    /// @return Car name
+    /// Get motorcycle name
+    /// @return Motorcycle name
     std::string get_name() const;
 
-    /// Drive the car
-    void drive() const;
+    /// Drive the motorcycle
+    void ride() const;
 };
 
 }
@@ -143,21 +150,21 @@ public:
 ```
 and the source:
 ```
-#include "../include/automobile_bits/car.hpp"
+#include "../include/automobile_bits/motorcycle.hpp"
 
 #include <iostream>
 
 namespace autos {
 
-Car::Car(std::string name) {
+Motorcycle::Motorcycle(std::string name) {
     _name = name;
 }
 
-std::string Car::get_name() const {
+std::string Motorcycle::get_name() const {
     return _name;
 }
 
-void Car::drive() const {
+void Motorcycle::ride() const {
     std::cout << "Zoom Zoom" << std::endl;
 }
 
@@ -170,7 +177,7 @@ We also need to have the header file find the actual library. Edit the `include/
 #ifndef AUTOMOBILE_LIBRARY_H
 #define AUTOMOBILE_LIBRARY_H
 
-#include "automobile_bits/car.hpp"
+#include "automobile_bits/motorcycle.hpp"
 
 #endif
 ```
@@ -217,11 +224,11 @@ Edit the `test.cpp` file to read:
 
 int main() {
 
-    autos::Car c("Mazda");
+    autos::Motorcycle c("Yamaha");
 
-    std::cout << "Made a car called: " << c.get_name() << std::endl;
+    std::cout << "Made a motorcycle called: " << c.get_name() << std::endl;
 
-    c.drive();
+    c.ride();
 
     return 0;
 }
@@ -260,7 +267,7 @@ cd ../bin
 ```
 Note that the binary will be in the `bin` directory. The output should be:
 ```
-Made a car called: Mazda
+Made a motorcycle called: Yamaha
 Zoom Zoom on road: mullholland
 ```
 
@@ -327,8 +334,8 @@ DPYTHON_EXECUTABLE="/Users/USERNAME/opt/anaconda3/bin/python3"
 ```
 Note that if you are lazy like me, you can try to add for **testing**:
 ```
-set(PYTHON_LIBRARY_DIR "/Users/oernst/opt/anaconda3/lib/python3.7/site-packages")
-set(PYTHON_EXECUTABLE "/Users/oernst/opt/anaconda3/bin/python3")
+set(PYTHON_LIBRARY_DIR "/Users/USERNAME/opt/anaconda3/lib/python3.7/site-packages")
+set(PYTHON_EXECUTABLE "/Users/USERNAME/opt/anaconda3/bin/python3")
 ```
 in your `CMakeLists.txt` - obviously not a good trick for production!
 
@@ -353,7 +360,7 @@ Give it the following content:
 
 namespace py = pybind11;
 
-void init_car(py::module &);
+void init_motorcycle(py::module &);
 
 namespace mcl {
 
@@ -361,59 +368,60 @@ PYBIND11_MODULE(automobile, m) {
     // Optional docstring
     m.doc() = "Automobile library";
     
-    init_car(m);
+    init_motorcycle(m);
 }
 }
 ```
 
-Next, we will define the `init_car` method that was declared. We will do this in a separate file:
+Next, we will define the `init_motorcycle` method that was declared. We will do this in a separate file:
 ```
-touch python/car.cpp
+touch python/motorcycle.cpp
 ```
 Edit it to read:
 ```
-#include "../cpp/include/automobile_bits/car.hpp"
+#include "../cpp/include/automobile_bits/motorcycle.hpp"
 
 #include <pybind11/stl.h>
 
 #include <pybind11/pybind11.h>
 namespace py = pybind11;
 
-void init_car(py::module &m) {
+void init_motorcycle(py::module &m) {
     
-    py::class_<autos::Car>(m, "Car")
+    py::class_<autos::Motorcycle>(m, "Motorcycle")
     .def(py::init<std::string>(), py::arg("name"))
     .def("get_name",
-         py::overload_cast<>( &autos::Car::get_name, py::const_))
-    .def("drive",
-         py::overload_cast<std::string>( &autos::Car::drive, py::const_),
+         py::overload_cast<>( &autos::Motorcycle::get_name, py::const_))
+    .def("ride",
+         py::overload_cast<std::string>( &autos::Motorcycle::ride, py::const_),
          py::arg("road"));
 }
 ```
 
 I always find the code itself to be the best explanation, but some pointers:
-- `py::class_<autos::Car>(m, "Car")` defines the class. The `"Car"` defines the name of the class in `Python` - you could change it if you want! Notice also the appearance of the namespace.
+- `py::class_<autos::Motorcycle>(m, "Motorcycle")` defines the class. The `"Motorcycle"` defines the name of the class in `Python` - you could change it if you want! Notice also the appearance of the namespace.
 - `.def(py::init<std::string>(), py::arg("name"))` defines the constructor. The `py::arg("name")` allows you to use named arguments in `Python`.
-- `.def("get_name", py::overload_cast<>( &autos::Car::get_name, py::const_))` wraps the `get_name` method. Note how the `const` declaration is wrapped.
-- `.def("drive", py::overload_cast<std::string>( &autos::Car::drive, py::const_), py::arg("road"));` wraps the `drive` method. The arguments to the method are declared in `py::overload_cast<std::string>` (separated by commas if multiple), and can again be named using `py::arg("road")`. Also note the semicolon at the end - often forgotten, but this should be proper `C++` code.
+- `.def("get_name", py::overload_cast<>( &autos::Motorcycle::get_name, py::const_))` wraps the `get_name` method. Note how the `const` declaration is wrapped.
+- `.def("ride", py::overload_cast<std::string>( &autos::Motorcycle::ride, py::const_), py::arg("road"));` wraps the `ride` method. The arguments to the method are declared in `py::overload_cast<std::string>` (separated by commas if multiple), and can again be named using `py::arg("road")`. Also note the semicolon at the end - often forgotten, but this should be proper `C++` code.
 
 You can now test your library. Run `make` and `make install` again to rebuild and install the library.
 
 Fire up `python` and try it:
 ```
 import automobile
-c = automobile.Car("Mazda")
-print("Made a car called: %s" % c.get_name())
-c.drive("mullholland")
+c = automobile.Motorcycle("Yamaha")
+print("Made a motorcycle called: %s" % c.get_name())
+c.ride("mullholland")
 ```
 should give the same output as before:
 ```
-Made a car called: Mazda
+Made a motorcycle called: Yamaha
 Zoom Zoom on road: mullholland
 ```
-
 You could make another test script with those contents, located in a directory `tests/test.py`.
 
 ## Conclusion
 
-That's it for this tutorial. There are obviously much more advanced features of `pybind11` not covered here - maybe for another day.
+That's it for this tutorial. The nice part about this setup is that you can build your `C++` project in peace from the `cpp` directory, and then at the end in the outer layer worry about wrapping it into `Python`.
+
+There are obviously much more advanced features of `pybind11` not covered here - maybe for another day!

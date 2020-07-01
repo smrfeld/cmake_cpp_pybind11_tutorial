@@ -18,8 +18,8 @@ set(PROJECT_INCLUDE_DIR "include/automobile_bits")
 
 # Source files
 set(SOURCE_FILES
-    ${PROJECT_INCLUDE_DIR}/car.hpp
-    ${PROJECT_SOURCE_DIR}/car.cpp
+    ${PROJECT_INCLUDE_DIR}/motorcycle.hpp
+    ${PROJECT_SOURCE_DIR}/motorcycle.cpp
 )
 
 # Set up such that XCode organizes the files correctly
