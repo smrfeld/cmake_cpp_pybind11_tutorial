@@ -2,6 +2,13 @@
 
 This tutorial shows how to set up a `pybind11` project with `CMake` for wrapping a `C++` library into `Python`.
 
+## Requirements
+
+Obviously, get `pybind11`:
+```
+conda install -c conda-forge pybind11
+```
+
 ## Create a C++ project
 
 We will use the outer (current) working directory to build python, and an inner directory called `cpp` to build the `C++` code. First make a C++ directory.
@@ -58,7 +65,12 @@ Next, we will initialize a C++ project. Two ways (of many more) are:
 
 We will need to edit the current `CMakeLists.txt` such that it can find the header and source files. I edited mine to read as follows:
 ```
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.1)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 project(car VERSION 0.1.0)
 
 # Include dir
@@ -251,3 +263,81 @@ Note that the binary will be in the `bin` directory. The output should be:
 Made a car called: Mazda
 Vroom Vroom
 ```
+
+## Setting up the Python wrapper
+
+Finally, let's get to wrapping the library into a Python. We're moving up a directory! In the main directory, let's make a new directory called `python`. It will hold all the glue code:
+```
+mkdir python
+```
+We also need a `CMakeLists.txt` file, with contents:
+```
+cmake_minimum_required(VERSION 3.1)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+set(CMAKE_CXX_FLAGS "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+
+project(car)
+
+include_directories(/home/oernst/local/include)
+include_directories("${CMAKE_SOURCE_DIR}/cpp/include/car_bits")
+include_directories("${CMAKE_SOURCE_DIR}/python")
+
+file (GLOB SOURCE_FILES "cpp/src/*.cpp")
+file (GLOB HEADER_FILES "cpp/include/car_bits/*.hpp")
+file (GLOB PYTHON_FILES "python/*.cpp" "python/*.hpp")
+
+# Set up such that XCode organizes the files
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FILES} ${PYTHON_FILES} )
+
+find_package(pybind11 REQUIRED)
+pybind11_add_module(car 
+	${SOURCE_FILES}
+	${HEADER_FILES}
+	${PYTHON_FILES}
+)
+
+target_link_libraries(car PUBLIC)
+
+install(TARGETS car
+  COMPONENT python
+  LIBRARY DESTINATION "${PYTHON_LIBRARY_DIR}"
+  )
+```
+
+You should be ready to build your `Python` library! Try:
+```
+mkdir build
+cd build
+cmake .. -DPYTHON_LIBRARY_DIR="/path/to/site-packages" -DPYTHON_EXECUTABLE="/path/to/executable/python3"
+make
+make install
+```
+As usual, you could also generate code using a generator for your favorite IDE, e.g. by adding `-GXcode` to the `cmake` command. My paths were:
+```
+DPYTHON_LIBRARY_DIR="/Users/USERNAME/opt/anaconda3/lib/python3.7/site-packages"
+DPYTHON_EXECUTABLE="/Users/USERNAME/opt/anaconda3/bin/python3"
+```
+Note that if you are lazy like me, you can try to add for **testing**:
+```
+set(PYTHON_LIBRARY_DIR "/Users/oernst/opt/anaconda3/lib/python3.7/site-packages")
+set(PYTHON_EXECUTABLE "/Users/oernst/opt/anaconda3/bin/python3")
+```
+in your `CMakeLists.txt` - obviously not a good trick for production!
+
+Fire up `python` (make sure it's the same as you specified in `PYTHON_EXECUTABLE` above) and try:
+```
+>>> import car
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: dynamic module does not define module export function (PyInit_car)
+```
+You got a nice fat error, but that's OK! We didn't write the glue code yet, but at least your `CMake` is working and `Python` can find your library.
