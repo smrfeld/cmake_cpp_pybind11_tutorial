@@ -14,29 +14,28 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(PYTHON_LIBRARY_DIR "/Users/oernst/opt/anaconda3/lib/python3.7/site-packages")
 set(PYTHON_EXECUTABLE "/Users/oernst/opt/anaconda3/bin/python3")
 
-project(car)
+project(automobile)
 
-include_directories(/home/oernst/local/include)
-include_directories("${CMAKE_SOURCE_DIR}/cpp/include/car_bits")
+include_directories("${CMAKE_SOURCE_DIR}/cpp/include/automobile_bits")
 include_directories("${CMAKE_SOURCE_DIR}/python")
 
 file (GLOB SOURCE_FILES "cpp/src/*.cpp")
-file (GLOB HEADER_FILES "cpp/include/car_bits/*.hpp")
+file (GLOB HEADER_FILES "cpp/include/automobile_bits/*.hpp")
 file (GLOB PYTHON_FILES "python/*.cpp" "python/*.hpp")
 
 # Set up such that XCode organizes the files
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FILES} ${PYTHON_FILES} )
 
 find_package(pybind11 REQUIRED)
-pybind11_add_module(car 
+pybind11_add_module(automobile 
 	${SOURCE_FILES}
 	${HEADER_FILES}
 	${PYTHON_FILES}
 )
 
-target_link_libraries(car PUBLIC)
+target_link_libraries(automobile PUBLIC)
 
-install(TARGETS car
+install(TARGETS automobile
   COMPONENT python
   LIBRARY DESTINATION "${PYTHON_LIBRARY_DIR}"
   )

@@ -3,7 +3,7 @@
 #ifndef CAR_H
 #define CAR_H
 
-namespace carn {
+namespace autos {
 
 class Car {
 
@@ -22,7 +22,8 @@ public:
     std::string get_name() const;
 
     /// Drive the car
-    void drive() const;
+    /// @param road Name of the road
+    void drive(std::string road) const;
 };
 
 }
