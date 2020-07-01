@@ -8,6 +8,7 @@ The final result will be:
 * Both using `CMake`.
 
 <img src="cover.jpg" alt="drawing" width="400"/>
+
 [Image source.](https://www.flickr.com/photos/akira_1972/15689067279/)
 
 ## Requirements
