@@ -8,6 +8,7 @@ The final result will be:
 * Both using `CMake`.
 
 <img src="cover.jpg" alt="drawing" width="400"/>
+[Image source.](https://wallhere.com/en/wallpaper/731807)
 
 ## Requirements
 
