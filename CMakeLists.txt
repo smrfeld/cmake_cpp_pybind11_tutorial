@@ -11,9 +11,6 @@ endif()
 set(CMAKE_CXX_FLAGS "-O3")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
-set(PYTHON_LIBRARY_DIR "/Users/oernst/opt/anaconda3/lib/python3.7/site-packages")
-set(PYTHON_EXECUTABLE "/Users/oernst/opt/anaconda3/bin/python3")
-
 project(automobile)
 
 include_directories("${CMAKE_SOURCE_DIR}/cpp/include/automobile_bits")
