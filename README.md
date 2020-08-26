@@ -11,13 +11,6 @@ The final result will be:
 
 [Image source.](https://www.flickr.com/photos/akira_1972/15689067279/)
 
-## Requirements
-
-Obviously, get `pybind11`:
-```
-conda install -c conda-forge pybind11
-```
-
 ## Create a C++ project
 
 We will use the outer (current) working directory to build python, and an inner directory called `cpp` to build the `C++` code. First make a C++ directory.
@@ -307,6 +300,11 @@ file (GLOB PYTHON_FILES "python/*.cpp" "python/*.hpp")
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES} ${HEADER_FILES} ${PYTHON_FILES} )
 
 find_package(pybind11 REQUIRED)
+```
+
+If pybind11 hasn't been installed in the system (e.g.: `conda install -c conda-forge pybind11`), you can use the `pybind11.cmake` file to fetch the package (see `CMakeLists.txt` as an example).
+
+```
 pybind11_add_module(automobile 
 	${SOURCE_FILES}
 	${HEADER_FILES}
