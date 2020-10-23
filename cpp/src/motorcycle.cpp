@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace autos {
+namespace vehicles {
 
 Motorcycle::Motorcycle(std::string name) {
     _name = name;

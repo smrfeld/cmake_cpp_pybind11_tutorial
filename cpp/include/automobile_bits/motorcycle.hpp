@@ -3,7 +3,7 @@
 #ifndef MOTORCYCLE_H
 #define MOTORCYCLE_H
 
-namespace autos {
+namespace vehicles {
 
 class Motorcycle {
 
