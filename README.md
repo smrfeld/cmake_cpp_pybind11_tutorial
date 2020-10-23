@@ -117,7 +117,7 @@ Let's also give the `motorcycle.hpp` and `motorcycle.cpp` files some reasonable 
 #ifndef CAR_H
 #define CAR_H
 
-namespace autos {
+namespace vehicles {
 
 class Motorcycle {
 
@@ -149,7 +149,7 @@ and the source:
 
 #include <iostream>
 
-namespace autos {
+namespace vehicles {
 
 Motorcycle::Motorcycle(std::string name) {
     _name = name;
@@ -165,7 +165,7 @@ void Motorcycle::ride() const {
 
 }
 ```
-Yes! I know they're dumb. Note that we introduced a namespace `autos` - this is always a good idea.
+Yes! I know they're dumb. Note that we introduced a namespace `vehicles` - this is always a good idea.
 
 We also need to have the header file find the actual library. Edit the `include/automobile` file to read:
 ```
@@ -219,7 +219,7 @@ Edit the `test.cpp` file to read:
 
 int main() {
 
-    autos::Motorcycle c("Yamaha");
+    vehicles::Motorcycle c("Yamaha");
 
     std::cout << "Made a motorcycle called: " << c.get_name() << std::endl;
 
@@ -388,21 +388,21 @@ namespace py = pybind11;
 
 void init_motorcycle(py::module &m) {
     
-    py::class_<autos::Motorcycle>(m, "Motorcycle")
+    py::class_<vehicles::Motorcycle>(m, "Motorcycle")
     .def(py::init<std::string>(), py::arg("name"))
     .def("get_name",
-         py::overload_cast<>( &autos::Motorcycle::get_name, py::const_))
+         py::overload_cast<>( &vehicles::Motorcycle::get_name, py::const_))
     .def("ride",
-         py::overload_cast<std::string>( &autos::Motorcycle::ride, py::const_),
+         py::overload_cast<std::string>( &vehicles::Motorcycle::ride, py::const_),
          py::arg("road"));
 }
 ```
 
 I always find the code itself to be the best explanation, but some pointers:
-- `py::class_<autos::Motorcycle>(m, "Motorcycle")` defines the class. The `"Motorcycle"` defines the name of the class in `Python` - you could change it if you want! Notice also the appearance of the namespace.
+- `py::class_<vehicles::Motorcycle>(m, "Motorcycle")` defines the class. The `"Motorcycle"` defines the name of the class in `Python` - you could change it if you want! Notice also the appearance of the namespace.
 - `.def(py::init<std::string>(), py::arg("name"))` defines the constructor. The `py::arg("name")` allows you to use named arguments in `Python`.
-- `.def("get_name", py::overload_cast<>( &autos::Motorcycle::get_name, py::const_))` wraps the `get_name` method. Note how the `const` declaration is wrapped.
-- `.def("ride", py::overload_cast<std::string>( &autos::Motorcycle::ride, py::const_), py::arg("road"));` wraps the `ride` method. The arguments to the method are declared in `py::overload_cast<std::string>` (separated by commas if multiple), and can again be named using `py::arg("road")`. Also note the semicolon at the end - often forgotten, but this should be proper `C++` code.
+- `.def("get_name", py::overload_cast<>( &vehicles::Motorcycle::get_name, py::const_))` wraps the `get_name` method. Note how the `const` declaration is wrapped.
+- `.def("ride", py::overload_cast<std::string>( &vehicles::Motorcycle::ride, py::const_), py::arg("road"));` wraps the `ride` method. The arguments to the method are declared in `py::overload_cast<std::string>` (separated by commas if multiple), and can again be named using `py::arg("road")`. Also note the semicolon at the end - often forgotten, but this should be proper `C++` code.
 
 You can now test your library. Run `make` and `make install` again to rebuild and install the library.
 
