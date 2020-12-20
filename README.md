@@ -1,5 +1,8 @@
 # Setting up a C++/Python project with pybind11 and CMake
 
+[You can read this in a nicer format on Medium.](https://medium.com/practical-coding/setting-up-a-c-python-project-with-pybind11-and-cmake-8de391494fca)
+[You can also follow my publication 'practical coding' on Medium for more articles like this.](https://medium.com/practical-coding)
+
 This tutorial shows how to set up a `pybind11` project with `CMake` for wrapping a `C++` library into `Python`.
 
 The final result will be:
