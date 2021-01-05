@@ -1,7 +1,8 @@
 # Setting up a C++/Python project with pybind11 and CMake
 
-[You can read this in a nicer format on Medium.](https://medium.com/practical-coding/setting-up-a-c-python-project-with-pybind11-and-cmake-8de391494fca)
-[You can also follow my publication 'practical coding' on Medium for more articles like this.](https://medium.com/practical-coding)
+* [Read this in a nicer format on Medium.](https://medium.com/practical-coding/setting-up-a-c-python-project-with-pybind11-and-cmake-8de391494fca)
+* [Follow my publication 'practical coding' on Medium for more articles like this.](https://medium.com/practical-coding)
+* [Tutorial on more advanced pybind11 features here.](https://github.com/smrfeld/advanced_pybind11_features)
 
 This tutorial shows how to set up a `pybind11` project with `CMake` for wrapping a `C++` library into `Python`.
 
@@ -427,4 +428,4 @@ You could make another test script with those contents, located in a directory `
 
 That's it for this tutorial. The nice part about this setup is that you can build your `C++` project in peace from the `cpp` directory, and then at the end in the outer layer worry about wrapping it into `Python`.
 
-There are obviously much more advanced features of `pybind11` not covered here - maybe for another day!
+[You can read about more advanced pybindy11 features in another tutorial here](https://github.com/smrfeld/advanced_pybind11_features).
