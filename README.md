@@ -212,10 +212,10 @@ mkdir tests
 Here we will again set up a `CMake` project for our test. Make the directory structure look as follows:
 ```
 cpp/tests/CMakeLists.txt
-cpp/tests/src/test.cpp
+cpp/tests/src/test_cpp.cpp
 ```
 
-Edit the `test.cpp` file to read:
+Edit the `test_cpp.cpp` file to read:
 ```
 #include <automobile>
 
@@ -240,7 +240,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-project(test)
+project(test_cpp)
 
 include_directories(/usr/local/include)
 
@@ -250,9 +250,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/../bin)
 
 find_library(AUTOMOBILE_LIB automobile HINTS /usr/local/lib/)
 
-add_executable(test src/test.cpp)
+add_executable(test_cpp src/test_cpp.cpp)
 
-target_link_libraries(test PUBLIC ${AUTOMOBILE_LIB})
+target_link_libraries(test_cpp PUBLIC ${AUTOMOBILE_LIB})
 ```
 
 Make and run that bad boy using `XCode` as before, or from the command line:
@@ -262,7 +262,7 @@ cd build
 cmake ..
 make
 cd ../bin
-./test
+./test_cpp
 ```
 Note that the binary will be in the `bin` directory. The output should be:
 ```
