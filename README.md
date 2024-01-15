@@ -27,7 +27,7 @@ Next, we will initialize a C++ project. Two ways (of many more) are:
 1. Using `VS Code`. Install the `CMake Tools` extension. Then, bring up the command pallette and select `CMake: Quick start`. Follow the prompts and enter a name - I chose `automobile`. When prompted for library or executable, choose `library`. Your directory should now look like this:
     ```
     cpp/build/
-    cpp/motorcycle.cpp
+    cpp/automobile.cpp
     cpp/CMakeLists.txt
     ```
     We will separate the source and header files - this is always good practice. In the `cpp` directory, make two new directories:
@@ -38,7 +38,7 @@ Next, we will initialize a C++ project. Two ways (of many more) are:
     ```
     and move the source file:
     ```
-    mv motorcycle.cpp src/
+    mv automobile.cpp src/
     ```
     In the include directory, we would like to have a single header to import. This way, we could later simply `#include <automobile>`. We can organize it as follows:
     ```
